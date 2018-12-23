@@ -31,18 +31,14 @@ fact SingleWeaponPerPerson {
 -- Which weapon, then, which was not the firearm, was found in the kitchen?
 fact Clue1 {
 	Kitchen.contains in Man
-	let p = Kitchen.contains {
-		p.weapon not in Rope + Knife + Bag + Firearm
-	}
+	Kitchen.contains.weapon not in Rope + Knife + Bag + Firearm
 }
 
 -- Clue 2:  Clue 2: Barbara was either in the study or the bathroom; Yolanda was in the other.
 -- Which room was Barbara found in?
 fact Clue2 {
-	Study.contains in Barbara or Bathroom.contains in Barbara
-
-	Study.contains in Barbara implies Bathroom.contains in Yolanda
-	Bathroom.contains in Barbara  implies Study.contains in Yolanda
+	Study.contains = Barbara or Bathroom.contains = Barbara
+	(Study + Bathroom).contains in Barbara+Yolanda
 }
 
 -- Clue 3: The person with the bag, who was not Barbara nor George, was not in the bathroom nor the dining room.
@@ -55,7 +51,8 @@ fact Clue3 {
 
 -- Clue 4: The woman with the rope was found in the study. Who had the rope?
 fact Clue4 {
-	let p = Study.contains | p in Woman and p.weapon = Rope
+	Study.contains in Woman
+	Study.contains.weapon = Rope
 }
 
 -- Clue 5: The weapon in the living room was found with either John or George. What weapon was in the living room?
@@ -65,7 +62,7 @@ fact Clue5 {
 
 -- Clue 6: The knife was not in the dining room. So where was the knife?
 fact Clue6 {
-	let p = Diningroom.contains | p.weapon != Knife
+	Diningroom.contains.weapon != Knife
 }
 
 
@@ -82,6 +79,6 @@ fact Clue8 {
 -- Clue 9: It was discovered that Mr. Boddy was gassed in the pantry.
 -- The suspect found in that room was the murderer. Who, then, do you point the finger towards?
 fact Clue9 {
-	let p = Pantry.contains | p.weapon = Gas
+	Pantry.contains.weapon = Gas
 }
 
