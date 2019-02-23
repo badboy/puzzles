@@ -2,7 +2,7 @@
 //
 // You have two jugs, one 5 gallon, one 3 gallon.
 // Fill one with exactly 4 gallons of water.
-// 
+//
 // You have no other measurement at hand.
 
 open util/ordering[State]
@@ -18,38 +18,48 @@ sig State {
 }
 
 pred FillSmall(s, s': State) {
-  s'.small = 3 and s'.big = s.big
+  s'.small = 3
+  s'.big = s.big
 }
 
 pred FillBig(s, s': State) {
-  s'.big = 5 and s'.small = s.small
+  s'.big = 5
+  s'.small = s.small
 }
 
 pred EmptySmall(s, s': State) {
-  s'.small = 0 and s'.big = s.big
+  s'.small = 0
+  s'.big = s.big
 }
 
 pred EmptyBig(s, s': State) {
-  s'.big = 0 and s'.small = s.small
+  s'.big = 0
+  s'.small = s.small
 }
 
 pred SmallToBig(s, s': State) {
-  (plus[s.big, s.small] <= 5) implies
-    (s'.big = plus[s.big, s.small] and s'.small = 0)
-  else 
-    (s'.big = 5 and s'.small = minus[s.small, minus[5, s.big]])
+  plus[s.big, s.small] <= 5 => {
+    s'.big = plus[s.big, s.small]
+    s'.small = 0
+  } else {
+    s'.big = 5
+    s'.small = minus[s.small, minus[5, s.big]]
+  }
 }
 
 
 pred BigToSmall(s, s': State) {
-  (plus[s.big, s.small] <= 3) implies 
-    (s'.big = 0 and s'.small = plus[s.big, s.small])
-  else 
-    (s'.small = 3 and s'.big = minus[s.small, minus[3, s.big]])
+  plus[s.big, s.small] <= 3 => {
+    s'.big = 0
+    s'.small = plus[s.big, s.small]
+  } else {
+    s'.small = 3
+    s'.big = minus[s.small, minus[3, s.big]]
+  }
 }
 
 pred step(s, s': State) {
-  FillSmall[s, s'] 
+  FillSmall[s, s']
   or FillBig[s, s']
   or EmptySmall[s, s']
   or EmptyBig[s, s']
